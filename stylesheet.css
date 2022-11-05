@@ -20,12 +20,22 @@
 }
 
 .calc-Display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height:75px;
     width: 350px;
     background-color: #b2d8b2;
     border: 4px #999999 solid;
     border-radius: 8px;
     margin-bottom: 60px;
+}
+
+.calc-Content {
+    height:60px;
+    width: 325px;
+    text-align: right;
+    font-size: 45px;
 }
 
 .buttonGrid {
@@ -50,4 +60,10 @@ button {
     padding: 20px;
     width: 100%;
     border-radius: 8px;
+    font-size: 20px;
+}
+
+.button15 {
+    color: white;
+    background-color: orange;
 }
