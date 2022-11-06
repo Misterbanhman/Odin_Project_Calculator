@@ -2,6 +2,7 @@ const buttonGrid = document.querySelector('.buttonGrid');
 const calcContent1 = document.querySelector('.calc-Content1');
 const calcContent2 = document.querySelector('.calc-Content2');
 
+let decimalPressed = false;
 let symbolPressed = false;
 let displayValue = ["","",""];
 const buttonAmount = 16;
@@ -11,7 +12,8 @@ calcContent2.textContent = 0;
 
 //ADDITION FUNCTION
 function add(value1,value2) {
-    let sum = value1 + value2;
+    let sum = Number(value1) + Number(value2);
+    sum += '';
     return sum;
 }
 
@@ -24,7 +26,6 @@ function subtract(value1,value2) {
 //MULTIPLICATION FUNCTION
 function multiply(value1,value2) {
     let multiplication = value1 * value2;
-    console.log("This is hit 2")
     return multiplication;
 }
 
@@ -34,22 +35,35 @@ function divide(value1,value2) {
     return division;
 }
 
+function round(value) {
+    return Math.round(value *10)/10;
+}
+
 //OPERATION FUNCTION
 function operate (operator, value1, value2) {
     if (operator === '+') {
-        return add(value1,value2);
+        return round(add(value1,value2));
     }
 
     else if (operator === '-') {
-        return subtract(value1,value2);
+        return round(subtract(value1,value2));
     }
 
     else if (operator === '*') {
-        return multiply(value1,value2);
+        return round(multiply(value1,value2));
     }
 
     else {
-        return divide(value1,value2);
+        return round(divide(value1,value2));
+    }
+}
+
+function containsDecimal (string) {
+    if (string.indexOf('.') > -1) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
 
@@ -61,16 +75,53 @@ function clickListener() {
         button.addEventListener('click', function(event) {
             let buttonPressed = (event.target).textContent;
             
-            if (symbolPressed === false) {
+            if (buttonPressed === 'RESET') {
+                displayValue[0] = '';
+                displayValue[1] = '';
+                displayValue[2] = '';
+                calcContent1.textContent = '';
+                calcContent2.textContent = 0;
+                symbolPressed = false;
+            }
+
+            else if (buttonPressed === 'BACKSPACE') {
+                if (symbolPressed === false) {
+                    displayValue[0] = '';
+                    calcContent2.textContent = displayValue[0];
+                }
+
+                else{
+                    displayValue[2] = '';
+                    calcContent1.textContent = displayValue[0]+displayValue[1];
+                }
+            }
+
+            else if (buttonPressed === '.') {
+                if (decimalPressed === false && containsDecimal(displayValue[0]) === false && displayValue[2] === '') {
+                    decimalPressed = true;
+                    displayValue[0] += buttonPressed;
+                    // console.log("You pressed the decimal")
+                }
+
+                else if ((decimalPressed === false || decimalPressed === true) && containsDecimal(displayValue[2]) === false && displayValue[2].length > 0) {
+                    displayValue[2] += buttonPressed;
+                }
+                else {
+
+                }
+            }
+            
+            else if (symbolPressed === false) {
                 if (buttonPressed === '+' || buttonPressed === '-' || buttonPressed === '*' || buttonPressed === '÷') {
                     symbolPressed = true;
                     displayValue[1] = buttonPressed;
                     calcContent1.textContent +=  calcContent2.textContent + buttonPressed;
-                    // console.log(displayValue[0]);
+                    // console.log("You pressed a symbol!")
                 }
                 else {
                     displayValue[0] += buttonPressed;
                     calcContent2.textContent = displayValue[0];
+                    decimalPressed = false;
                 }
             }
             
@@ -79,8 +130,9 @@ function clickListener() {
                 if (buttonPressed === '+' || buttonPressed === '-' || buttonPressed === '*' || buttonPressed === '÷') {
                     if (displayValue[2] != "") {
                         displayValue[0] = operate(displayValue[1],displayValue[0],displayValue[2]);
+                        displayValue[1] = buttonPressed;
                         displayValue[2] = "";
-                        calcContent1.textContent = displayValue[0] + buttonPressed;
+                        calcContent1.textContent = displayValue[0] + displayValue[1];
                         calcContent2.textContent = displayValue[0];     
                     }
                     
@@ -94,6 +146,7 @@ function clickListener() {
                     if (displayValue[2] != '') {
                         calcContent1.textContent = displayValue[0] + displayValue[1] + displayValue[2] + '=';
                         displayValue[0] = operate(displayValue[1],displayValue[0],displayValue[2]);
+                        // displayValue[1] = "";
                         displayValue[2] = "";
                         calcContent2.textContent = displayValue[0];  
                     }

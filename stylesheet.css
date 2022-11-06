@@ -1,5 +1,5 @@
 .main-container {
-    border: red 2px solid;
+    /* border: red 2px solid; */
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -77,7 +77,13 @@ button {
     background-color: orange;
 }
 
-.resetButton {
+.utility-buttons {
+    display: flex;
+    gap:30px;
+}
+
+.resetButton,
+.backSpaceButton {
     margin-top: 75px;
     width: 200px;
     height:auto;
