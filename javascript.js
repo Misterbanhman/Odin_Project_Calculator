@@ -1,56 +1,55 @@
 const buttonGrid = document.querySelector('.buttonGrid');
-const calcContent = document.querySelector('.calc-Content');
-const buttonAmount = 16;
-let answer = 0;
+const calcContent1 = document.querySelector('.calc-Content1');
+const calcContent2 = document.querySelector('.calc-Content2');
 
-calcContent.textContent = 0;
+let symbolPressed = false;
+let displayValue = ["","",""];
+const buttonAmount = 16;
+
+calcContent2.textContent = 0;
 
 
 //ADDITION FUNCTION
 function add(value1,value2) {
-    const sum = value1 + value2;
+    let sum = value1 + value2;
     return sum;
 }
 
 //SUBTRACT FUNCTION
 function subtract(value1,value2) {
-    const subtraction = value1 - value2;
+    let subtraction = value1 - value2;
     return subtraction;
 }
 
 //MULTIPLICATION FUNCTION
 function multiply(value1,value2) {
-    const multiplication = value1 * value2;
+    let multiplication = value1 * value2;
+    console.log("This is hit 2")
     return multiplication;
 }
 
 //DIVISION FUNCTION
 function divide(value1,value2) {
-    const division = value1 / value2;
+    let division = value1 / value2;
     return division;
 }
 
 //OPERATION FUNCTION
 function operate (operator, value1, value2) {
     if (operator === '+') {
-        add(value1,value2);
+        return add(value1,value2);
     }
 
     else if (operator === '-') {
-        subtract(value1,value2);
+        return subtract(value1,value2);
     }
 
     else if (operator === '*') {
-        multiply(value1,value2);
-    }
-
-    else if (operator === '/') {
-        divide(value1,value2);
+        return multiply(value1,value2);
     }
 
     else {
-        alert("The value you entered in is not an operator. Please try again!");
-        //loop here
+        return divide(value1,value2);
     }
 }
 
@@ -60,7 +59,56 @@ function clickListener() {
 
     buttons.forEach((button) => {
         button.addEventListener('click', function(event) {
-            calcContent.textContent = (event.target).textContent;
+            let buttonPressed = (event.target).textContent;
+            
+            if (symbolPressed === false) {
+                if (buttonPressed === '+' || buttonPressed === '-' || buttonPressed === '*' || buttonPressed === '÷') {
+                    symbolPressed = true;
+                    displayValue[1] = buttonPressed;
+                    calcContent1.textContent +=  calcContent2.textContent + buttonPressed;
+                    // console.log(displayValue[0]);
+                }
+                else {
+                    displayValue[0] += buttonPressed;
+                    calcContent2.textContent = displayValue[0];
+                }
+            }
+            
+            //Symbol Pressed is true
+            else {
+                if (buttonPressed === '+' || buttonPressed === '-' || buttonPressed === '*' || buttonPressed === '÷') {
+                    if (displayValue[2] != "") {
+                        displayValue[0] = operate(displayValue[1],displayValue[0],displayValue[2]);
+                        displayValue[2] = "";
+                        calcContent1.textContent = displayValue[0] + buttonPressed;
+                        calcContent2.textContent = displayValue[0];     
+                    }
+                    
+                    else {
+                    displayValue[1] = buttonPressed;
+                    calcContent1.textContent = calcContent2.textContent + buttonPressed;
+                    }
+                }
+
+                else if (buttonPressed === '=') {
+                    if (displayValue[2] != '') {
+                        calcContent1.textContent = displayValue[0] + displayValue[1] + displayValue[2] + '=';
+                        displayValue[0] = operate(displayValue[1],displayValue[0],displayValue[2]);
+                        displayValue[2] = "";
+                        calcContent2.textContent = displayValue[0];  
+                    }
+                    else {
+
+                    }
+                }
+
+                else {
+                    displayValue[2] += buttonPressed;
+                    calcContent1.textContent = displayValue[0] + displayValue[1] + displayValue[2];
+                    calcContent2.textContent = displayValue[2];
+                }
+            }
+
         });
     });
 }
@@ -78,7 +126,6 @@ buttonGrid.style.gridTemplateRows = 'repeat(4,1fr)';
         let row = document.createElement('div');
         row.classList.add(rowClass);
         buttonGrid.appendChild(row);
-
         // let buttonDiv = document.getElementsByClassName(buttonClass);
 
 
@@ -115,7 +162,7 @@ let button6 = document.querySelector('.button6');
 button6.textContent = "6"
 
 let button7 = document.querySelector('.button7');
-button7.textContent = "X"
+button7.textContent = "*"
 
 let button8 = document.querySelector('.button8');
 button8.textContent = "1"
